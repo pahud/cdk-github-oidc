@@ -6,6 +6,7 @@ const project = new AwsCdkConstructLibrary({
   author: 'Pahud Hsieh',
   authorAddress: 'pahudnet@gmail.com',
   cdkVersion: '1.95.2',
+  description: 'CDK construct library for Github OpenID Connect Identity Provider',
   defaultReleaseBranch: 'main',
   name: '@pahud/cdk-github-oidc',
   repositoryUrl: 'https://github.com/pahud/cdk-github-oidc.git',
