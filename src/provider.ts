@@ -12,16 +12,16 @@ export class OpenIdConnectProvider extends cdk.Construct {
   public static readonly thumbprint: string = 'a031c46782e6e6c662c2c87c76da9aa62ccabd8e';
   readonly provider: iam.IOpenIdConnectProvider;
   constructor(scope: cdk.Construct, id: string) {
-    super(scope, id)
+    super(scope, id);
 
     this.provider = new iam.OpenIdConnectProvider(this, 'Provider', {
       url: `https://${OpenIdConnectProvider.issuer}`,
       clientIds: ['sts.amazonaws.com'],
-      thumbprints: [`${OpenIdConnectProvider.thumbprint}`], 
-    })
+      thumbprints: [`${OpenIdConnectProvider.thumbprint}`],
+    });
   }
   private formatSubject(repo: RepositoryConfig[]): string[] {
-    return repo.map(r => `repo:${r.owner}/${r.repo}:${r.filter ?? '*'}`)
+    return repo.map(r => `repo:${r.owner}/${r.repo}:${r.filter ?? '*'}`);
   }
   public createRole(id: string, repo: RepositoryConfig[], roleProps?: iam.RoleProps):iam.Role {
     const role = new iam.Role(this, id, {
@@ -34,10 +34,10 @@ export class OpenIdConnectProvider extends cdk.Construct {
         },
         StringLike: {
           [`${OpenIdConnectProvider.issuer}:sub`]: this.formatSubject(repo),
-        }
-      })
-    })
+        },
+      }),
+    });
 
-    return role
+    return role;
   }
 }

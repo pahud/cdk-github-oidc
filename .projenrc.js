@@ -1,6 +1,6 @@
 const { AwsCdkConstructLibrary, JsonFile, DevEnvironmentDockerImage, Gitpod, NpmAccess } = require('projen');
 
-const AUTOMATION_TOKEN = 'PROJEN_GITHUB_TOKEN'
+const AUTOMATION_TOKEN = 'PROJEN_GITHUB_TOKEN';
 
 const project = new AwsCdkConstructLibrary({
   author: 'Pahud Hsieh',
@@ -11,10 +11,12 @@ const project = new AwsCdkConstructLibrary({
   repositoryUrl: 'https://github.com/pahud/cdk-github-oidc.git',
   cdkDependencies: [
     '@aws-cdk/aws-iam',
+    '@aws-cdk/core',
   ],
   devDeps: [
     'aws-cdk',
     'ts-node',
+    '@aws-cdk/assertions',
   ],
   depsUpgradeOptions: {
     ignoreProjen: false,
@@ -28,14 +30,14 @@ const project = new AwsCdkConstructLibrary({
     distName: 'pahud-cdk-github-oidc',
     module: 'pahud_cdk_github_oidc',
   },
-  keywords: ['cdk', 'github', 'actions', 'oidc']
+  keywords: ['cdk', 'github', 'actions', 'oidc'],
 });
 
 new JsonFile(project, 'cdk.json', {
   obj: {
-    app: 'npx ts-node --prefer-ts-exts src/integ.default.ts'
-  }
-})
+    app: 'npx ts-node --prefer-ts-exts src/integ.default.ts',
+  },
+});
 
 const gitpodPrebuild = project.addTask('gitpod:prebuild', {
   description: 'Prebuild setup for Gitpod',
