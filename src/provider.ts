@@ -26,7 +26,7 @@ export class OpenIdConnectProvider extends cdk.Construct {
   public createRole(id: string, repo: RepositoryConfig[], roleProps?: iam.RoleProps):iam.Role {
     const role = new iam.Role(this, id, {
       ...roleProps,
-      assumedBy: new iam.WebIdentityPrincipal(this.provider.openIdConnectProviderArn, {
+      assumedBy: new iam.OpenIdConnectPrincipal(this.provider, {
         StringEquals: {
           // Audience is always sts.amazonaws.com with AWS official Github Action
           // https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#adding-the-identity-provider-to-aws
