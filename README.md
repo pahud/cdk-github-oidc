@@ -14,7 +14,7 @@ This construct is still in `experimental` stage and may have breaking changes. H
 # Sample
 
 ```ts
-import { Provider } from 'cdk-github-oidc';
+import { Provider } from '@pahud/cdk-github-oidc';
 
 // create the provider
 const provider = new Provider(stack, 'GithubOpenIdConnectProvider')
