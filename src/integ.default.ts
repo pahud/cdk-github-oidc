@@ -1,5 +1,5 @@
 import * as cdk from '@aws-cdk/core';
-import { OpenIdConnectProvider } from './';
+import { Provider } from './';
 
 const app = new cdk.App();
 
@@ -10,7 +10,7 @@ const env = {
 
 const stack = new cdk.Stack(app, 'demo-stack', { env });
 
-new OpenIdConnectProvider(stack, 'GithubOpenIdConnectProvider')
+new Provider(stack, 'GithubOpenIdConnectProvider')
   .createRole('gh-oidc-role',
     [
       { owner: 'pahud', repo: 'gitpod-workspace' },
