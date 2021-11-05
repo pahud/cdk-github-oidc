@@ -38,9 +38,9 @@ test('create iam role for multiple repositories)', () => {
   // WHEN
   provider.createRole('gh-oidc-role',
     [
-      { owner: 'pahud', repo: 'gitpod-workspace' },
-      { owner: 'pahud', repo: 'github-codespace' },
-      { owner: 'pahud', repo: 'vscode' },
+      { owner: 'pahud', repo: 'first-repo' },
+      { owner: 'pahud', repo: 'second-repo' },
+      { owner: 'pahud', repo: 'third-repo' },
     ],
   );
   // we should have a correct IAM role
@@ -55,9 +55,9 @@ test('create iam role for multiple repositories)', () => {
             },
             StringLike: {
               'token.actions.githubusercontent.com:sub': [
-                'repo:pahud/gitpod-workspace:*',
-                'repo:pahud/github-codespace:*',
-                'repo:pahud/vscode:*',
+                'repo:pahud/first-repo:*',
+                'repo:pahud/second-repo:*',
+                'repo:pahud/third-repo:*',
               ],
             },
           },

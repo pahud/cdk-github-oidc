@@ -17,9 +17,9 @@ const provider = new OpenIdConnectProvider(stack, 'GithubOpenIdConnectProvider')
 provider.createRole('demo-role', 
   // sharing this role across multiple repositories
   [
-    { owner: 'pahud', repo: 'gitpod-workspace' },
-    { owner: 'pahud', repo: 'github-codespace' },
-    { owner: 'pahud', repo: 'vscode' },
+    { owner: 'pahud', repo: 'first-repo' },
+    { owner: 'pahud', repo: 'second-repo' },
+    { owner: 'pahud', repo: 'third-repo' },
   ]
 )
 ```
