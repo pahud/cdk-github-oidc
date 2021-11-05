@@ -1,6 +1,6 @@
 import { Template } from '@aws-cdk/assertions';
 import * as cdk from '@aws-cdk/core';
-import { OpenIdConnectProvider } from '../src';
+import { Provider } from '../src';
 
 let app: cdk.App;
 let stack: cdk.Stack;
@@ -13,7 +13,7 @@ beforeEach(() => {
 test('create a default provider)', () => {
   // GIVEN
   // WHEN
-  new OpenIdConnectProvider(stack, 'Provider');
+  new Provider(stack, 'Provider');
   // we should have the provider
   Template.fromStack(stack).hasResourceProperties('Custom::AWSCDKOpenIdConnectProvider', {
     ServiceToken: {
@@ -32,15 +32,13 @@ test('create a default provider)', () => {
   });
 });
 
-test('create iam role for multiple repositories)', () => {
+test('create iam role for single repository)', () => {
   // GIVEN
-  const provider = new OpenIdConnectProvider(stack, 'Provider');
+  const provider = new Provider(stack, 'Provider');
   // WHEN
   provider.createRole('gh-oidc-role',
     [
-      { owner: 'pahud', repo: 'first-repo' },
-      { owner: 'pahud', repo: 'second-repo' },
-      { owner: 'pahud', repo: 'third-repo' },
+      { owner: 'octo-org', repo: 'repo' },
     ],
   );
   // we should have a correct IAM role
@@ -55,9 +53,125 @@ test('create iam role for multiple repositories)', () => {
             },
             StringLike: {
               'token.actions.githubusercontent.com:sub': [
-                'repo:pahud/first-repo:*',
-                'repo:pahud/second-repo:*',
-                'repo:pahud/third-repo:*',
+                'repo:octo-org/repo:*',
+              ],
+            },
+          },
+          Effect: 'Allow',
+          Principal: {
+            Federated: {
+              Ref: 'ProviderE1D0E886',
+            },
+          },
+        },
+      ],
+      Version: '2012-10-17',
+    },
+  });
+});
+
+test('create iam role for single repository specific branch)', () => {
+  // GIVEN
+  const provider = new Provider(stack, 'Provider');
+  // WHEN
+  provider.createRole('gh-oidc-role',
+    [
+      { owner: 'octo-org', repo: 'repo', filter: 'ref:refs/heads/demo-branch' },
+    ],
+  );
+  // we should have a correct IAM role and `StringLike` condition.
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+    AssumeRolePolicyDocument: {
+      Statement: [
+        {
+          Action: 'sts:AssumeRoleWithWebIdentity',
+          Condition: {
+            StringEquals: {
+              'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
+            },
+            StringLike: {
+              'token.actions.githubusercontent.com:sub': [
+                'repo:octo-org/repo:ref:refs/heads/demo-branch',
+              ],
+            },
+          },
+          Effect: 'Allow',
+          Principal: {
+            Federated: {
+              Ref: 'ProviderE1D0E886',
+            },
+          },
+        },
+      ],
+      Version: '2012-10-17',
+    },
+  });
+});
+
+test('create iam role for single repository specific tag)', () => {
+  // GIVEN
+  const provider = new Provider(stack, 'Provider');
+  // WHEN
+  provider.createRole('gh-oidc-role',
+    [
+      { owner: 'octo-org', repo: 'repo', filter: 'ref:refs/tags/demo-tag' },
+    ],
+  );
+  // we should have a correct IAM role and `StringLike` condition.
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+    AssumeRolePolicyDocument: {
+      Statement: [
+        {
+          Action: 'sts:AssumeRoleWithWebIdentity',
+          Condition: {
+            StringEquals: {
+              'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
+            },
+            StringLike: {
+              'token.actions.githubusercontent.com:sub': [
+                'repo:octo-org/repo:ref:refs/tags/demo-tag',
+              ],
+            },
+          },
+          Effect: 'Allow',
+          Principal: {
+            Federated: {
+              Ref: 'ProviderE1D0E886',
+            },
+          },
+        },
+      ],
+      Version: '2012-10-17',
+    },
+  });
+});
+
+test('create iam role for multiple repositories)', () => {
+  // GIVEN
+  const provider = new Provider(stack, 'Provider');
+  // WHEN
+  provider.createRole('gh-oidc-role',
+    [
+      { owner: 'octo-org', repo: 'first-repo' },
+      { owner: 'octo-org', repo: 'second-repo' },
+      { owner: 'octo-org', repo: 'third-repo' },
+    ],
+  );
+  // we should have a correct IAM role
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+    AssumeRolePolicyDocument: {
+      Statement: [
+        {
+          Action: 'sts:AssumeRoleWithWebIdentity',
+          Condition: {
+            StringEquals: {
+              'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
+            },
+            StringLike: {
+              'token.actions.githubusercontent.com:sub': [
+                'repo:octo-org/first-repo:*',
+                'repo:octo-org/second-repo:*',
+                'repo:octo-org/third-repo:*',
               ],
             },
           },
