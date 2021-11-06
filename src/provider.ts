@@ -1,6 +1,11 @@
 import * as iam from '@aws-cdk/aws-iam';
 import * as cdk from '@aws-cdk/core';
 
+const DEFAULTS: { [key: string]: string } = {
+  issuer: 'token.actions.githubusercontent.com',
+  thumbprint: 'a031c46782e6e6c662c2c87c76da9aa62ccabd8e',
+};
+
 /**
  * Represents a GitHub repository
  */
@@ -30,8 +35,7 @@ export interface RepositoryConfig {
 }
 
 export abstract class ProviderBase extends cdk.Resource {
-  public abstract readonly provider: iam.IOpenIdConnectProvider;
-  public abstract readonly issuer: string;
+  public abstract readonly openIdConnectProvider: iam.IOpenIdConnectProvider;
   /**
    *
    * @param repo a list of repositories
@@ -46,9 +50,9 @@ export abstract class ProviderBase extends cdk.Resource {
     }
     const role = new iam.Role(this, id, {
       ...roleProps,
-      assumedBy: new iam.OpenIdConnectPrincipal(this.provider, {
+      assumedBy: new iam.OpenIdConnectPrincipal(this.openIdConnectProvider, {
         StringLike: {
-          [`${this.issuer}:sub`]: this.formatSubject(repo),
+          [`${DEFAULTS.issuer}:sub`]: this.formatSubject(repo),
         },
       }),
     });
@@ -60,16 +64,12 @@ export abstract class ProviderBase extends cdk.Resource {
  * The Github OpenID Connect Provider
  */
 export class Provider extends ProviderBase {
-  public static issuer: string = 'token.actions.githubusercontent.com';
-  public static thumbprint: string = 'a031c46782e6e6c662c2c87c76da9aa62ccabd8e';
   /**
    * import the existing provider
    */
   public static fromAccount(scope: cdk.Construct, id: string): ProviderBase {
     class Import extends ProviderBase {
-      public readonly issuer: string = Provider.issuer;
-      public readonly thumbprint: string = Provider.thumbprint;
-      public readonly provider: iam.IOpenIdConnectProvider;
+      public readonly openIdConnectProvider: iam.IOpenIdConnectProvider;
       constructor(s: cdk.Construct, i: string) {
         super(s, i);
         // arn:aws:iam::xxxxxxxxxxxx:oidc-provider/token.actions.githubusercontent.com
@@ -77,24 +77,22 @@ export class Provider extends ProviderBase {
           resource: 'oidc-provider',
           service: 'iam',
           region: '',
-          resourceName: this.issuer,
+          resourceName: DEFAULTS.issuer,
         });
-        this.provider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(scope, `Provider${id}`, arn);
+        this.openIdConnectProvider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(scope, `Provider${id}`, arn);
       }
     }
     return new Import(scope, id);
   }
-
-  public readonly issuer: string = Provider.issuer;
-
-  readonly provider: iam.IOpenIdConnectProvider;
+  public readonly issuer: string = DEFAULTS.issuer;
+  public readonly openIdConnectProvider: iam.IOpenIdConnectProvider;
   constructor(scope: cdk.Construct, id: string) {
     super(scope, id);
 
-    this.provider = new iam.OpenIdConnectProvider(this, `Provider${id}`, {
-      url: `https://${Provider.issuer}`,
+    this.openIdConnectProvider = new iam.OpenIdConnectProvider(this, `Provider${id}`, {
+      url: `https://${DEFAULTS.issuer}`,
       clientIds: ['sts.amazonaws.com'],
-      thumbprints: [`${Provider.thumbprint}`],
+      thumbprints: [`${DEFAULTS.thumbprint}`],
     });
   }
 }
