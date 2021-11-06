@@ -29,30 +29,9 @@ export interface RepositoryConfig {
   readonly filter?: string;
 }
 
-/**
- * The Github OpenID Connect Provider
- */
-export class Provider extends cdk.Construct {
-  /**
-   * The issuer of the OIDC provider claim or the "provider URL".
-   * @see https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#adding-the-identity-provider-to-aws
-   */
-  public static readonly issuer: string = 'token.actions.githubusercontent.com';
-  /**
-   * The thumbprint of the OIDC provider claim.
-   * @see https://github.com/aws-actions/configure-aws-credentials
-   */
-  public static readonly thumbprint: string = 'a031c46782e6e6c662c2c87c76da9aa62ccabd8e';
-  readonly provider: iam.IOpenIdConnectProvider;
-  constructor(scope: cdk.Construct, id: string) {
-    super(scope, id);
-
-    this.provider = new iam.OpenIdConnectProvider(this, 'Provider', {
-      url: `https://${Provider.issuer}`,
-      clientIds: ['sts.amazonaws.com'],
-      thumbprints: [`${Provider.thumbprint}`],
-    });
-  }
+export abstract class ProviderBase extends cdk.Resource {
+  public abstract readonly provider: iam.IOpenIdConnectProvider;
+  public abstract readonly issuer: string;
   /**
    *
    * @param repo a list of repositories
@@ -61,13 +40,6 @@ export class Provider extends cdk.Construct {
   private formatSubject(repo: RepositoryConfig[]): string[] {
     return repo.map(r => `repo:${r.owner}/${r.repo}:${r.filter ?? '*'}`);
   }
-  /**
-   * Create an IAM role for the provider
-   * @param id
-   * @param repo a list of repositories using this role
-   * @param roleProps properties to create this role
-   * @returns an IAM role
-   */
   public createRole(id: string, repo: RepositoryConfig[], roleProps?: iam.RoleProps):iam.Role {
     if (repo.length == 0) {
       throw new Error('Error - at least one repository is required');
@@ -76,11 +48,53 @@ export class Provider extends cdk.Construct {
       ...roleProps,
       assumedBy: new iam.OpenIdConnectPrincipal(this.provider, {
         StringLike: {
-          [`${Provider.issuer}:sub`]: this.formatSubject(repo),
+          [`${this.issuer}:sub`]: this.formatSubject(repo),
         },
       }),
     });
-
     return role;
+  }
+}
+
+/**
+ * The Github OpenID Connect Provider
+ */
+export class Provider extends ProviderBase {
+  public static issuer: string = 'token.actions.githubusercontent.com';
+  public static thumbprint: string = 'a031c46782e6e6c662c2c87c76da9aa62ccabd8e';
+  /**
+   * import the existing provider
+   */
+  public static fromAccount(scope: cdk.Construct, id: string): ProviderBase {
+    class Import extends ProviderBase {
+      public readonly issuer: string = Provider.issuer;
+      public readonly thumbprint: string = Provider.thumbprint;
+      public readonly provider: iam.IOpenIdConnectProvider;
+      constructor(s: cdk.Construct, i: string) {
+        super(s, i);
+        // arn:aws:iam::xxxxxxxxxxxx:oidc-provider/token.actions.githubusercontent.com
+        const arn = cdk.Stack.of(scope).formatArn({
+          resource: 'oidc-provider',
+          service: 'iam',
+          region: '',
+          resourceName: this.issuer,
+        });
+        this.provider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(scope, `Provider${id}`, arn);
+      }
+    }
+    return new Import(scope, id);
+  }
+
+  public readonly issuer: string = Provider.issuer;
+
+  readonly provider: iam.IOpenIdConnectProvider;
+  constructor(scope: cdk.Construct, id: string) {
+    super(scope, id);
+
+    this.provider = new iam.OpenIdConnectProvider(this, `Provider${id}`, {
+      url: `https://${Provider.issuer}`,
+      clientIds: ['sts.amazonaws.com'],
+      thumbprints: [`${Provider.thumbprint}`],
+    });
   }
 }

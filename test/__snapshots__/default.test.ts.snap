@@ -116,7 +116,7 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "ProviderE1D0E886": Object {
+    "ProviderProviderProviderBCE1C93C": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
         "ClientIDList": Array [
