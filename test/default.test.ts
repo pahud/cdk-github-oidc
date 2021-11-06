@@ -11,7 +11,6 @@ beforeEach(() => {
   stack = new cdk.Stack(app, 'demo-stack');
 });
 
-
 test('create a default provider', () => {
   // GIVEN
   // WHEN
@@ -61,7 +60,7 @@ test('create iam role for single repository', () => {
           Effect: 'Allow',
           Principal: {
             Federated: {
-              Ref: 'ProviderE1D0E886',
+              Ref: 'ProviderProviderProviderBCE1C93C',
             },
           },
         },
@@ -96,7 +95,7 @@ test('create iam role for single repository specific branch', () => {
           Effect: 'Allow',
           Principal: {
             Federated: {
-              Ref: 'ProviderE1D0E886',
+              Ref: 'ProviderProviderProviderBCE1C93C',
             },
           },
         },
@@ -131,7 +130,7 @@ test('create iam role for single repository specific tag', () => {
           Effect: 'Allow',
           Principal: {
             Federated: {
-              Ref: 'ProviderE1D0E886',
+              Ref: 'ProviderProviderProviderBCE1C93C',
             },
           },
         },
@@ -170,7 +169,55 @@ test('create iam role for multiple repositories', () => {
           Effect: 'Allow',
           Principal: {
             Federated: {
-              Ref: 'ProviderE1D0E886',
+              Ref: 'ProviderProviderProviderBCE1C93C',
+            },
+          },
+        },
+      ],
+      Version: '2012-10-17',
+    },
+  });
+});
+
+test('create an iam role from the imported provider', () => {
+  // GIVEN
+  const provider = Provider.fromAccount(stack, 'Provider');
+  // WHEN
+  provider.createRole('gh-oidc-role',
+    [
+      { owner: 'octo-org', repo: 'repo' },
+    ],
+  );
+  // we should have a correct IAM role
+  expect(stack).toHaveResource('AWS::IAM::Role', {
+    AssumeRolePolicyDocument: {
+      Statement: [
+        {
+          Action: 'sts:AssumeRoleWithWebIdentity',
+          Condition: {
+            StringLike: {
+              'token.actions.githubusercontent.com:sub': [
+                'repo:octo-org/repo:*',
+              ],
+            },
+          },
+          Effect: 'Allow',
+          Principal: {
+            Federated: {
+              'Fn::Join': [
+                '',
+                [
+                  'arn:',
+                  {
+                    Ref: 'AWS::Partition',
+                  },
+                  ':iam::',
+                  {
+                    Ref: 'AWS::AccountId',
+                  },
+                  ':oidc-provider/token.actions.githubusercontent.com',
+                ],
+              ],
             },
           },
         },

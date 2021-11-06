@@ -11,12 +11,12 @@ Inspired by [aripalo/aws-cdk-github-oidc](https://github.com/aripalo/aws-cdk-git
 
 This construct is still in `experimental` stage and may have breaking changes. However, we aim to make this library as simple as possible.
 
-# Sample
+## Sample
 
 ```ts
 import { Provider } from '@pahud/cdk-github-oidc';
 
-// create the provider
+// create a new provider
 const provider = new Provider(stack, 'GithubOpenIdConnectProvider')
 // create an IAM role from this provider
 provider.createRole('demo-role', 
@@ -28,6 +28,18 @@ provider.createRole('demo-role',
   ]
 )
 ```
+
+## Import the provider
+
+Each AWS account can only have one GitHub OIDC identity provider. To import the existing one, use `Provider.fromAccount()`:
+
+```ts
+// import the provider
+const provider = Provider.fromAccount(stack, 'GithubOpenIdConnectProvider')
+// create a iam role from the imported provider
+provider.createRole(...)
+```
+
 
 ## Workflow sample
 
