@@ -26,13 +26,22 @@ new Provider(scope: Construct, id: string)
 
 ---
 
-#### Methods <a name="Methods"></a>
 
-##### `createRole` <a name="@pahud/cdk-github-oidc.Provider.createRole"></a>
+#### Static Functions <a name="Static Functions"></a>
+
+##### `fromAccount` <a name="@pahud/cdk-github-oidc.Provider.fromAccount"></a>
 
 ```typescript
-public createRole(id: string, repo: RepositoryConfig[], roleProps?: RoleProps)
+import { Provider } from '@pahud/cdk-github-oidc'
+
+Provider.fromAccount(scope: Construct, id: string)
 ```
+
+###### `scope`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.parameter.scope"></a>
+
+- *Type:* [`@aws-cdk/core.Construct`](#@aws-cdk/core.Construct)
+
+---
 
 ###### `id`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.parameter.id"></a>
 
@@ -40,56 +49,96 @@ public createRole(id: string, repo: RepositoryConfig[], roleProps?: RoleProps)
 
 ---
 
-###### `repo`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.parameter.repo"></a>
-
-- *Type:* [`@pahud/cdk-github-oidc.RepositoryConfig`](#@pahud/cdk-github-oidc.RepositoryConfig)[]
-
-a list of repositories using this role.
-
----
-
-###### `roleProps`<sup>Optional</sup> <a name="@pahud/cdk-github-oidc.Provider.parameter.roleProps"></a>
-
-- *Type:* [`@aws-cdk/aws-iam.RoleProps`](#@aws-cdk/aws-iam.RoleProps)
-
-properties to create this role.
-
----
-
-
 #### Properties <a name="Properties"></a>
 
-##### `provider`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.property.provider"></a>
+##### `issuer`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.property.issuer"></a>
 
 ```typescript
-public readonly provider: IOpenIdConnectProvider;
+public readonly issuer: string;
+```
+
+- *Type:* `string`
+
+---
+
+##### `openIdConnectProvider`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.property.openIdConnectProvider"></a>
+
+```typescript
+public readonly openIdConnectProvider: IOpenIdConnectProvider;
 ```
 
 - *Type:* [`@aws-cdk/aws-iam.IOpenIdConnectProvider`](#@aws-cdk/aws-iam.IOpenIdConnectProvider)
 
 ---
 
-#### Constants <a name="Constants"></a>
 
-##### `issuer` <a name="@pahud/cdk-github-oidc.Provider.property.issuer"></a>
+### ProviderBase <a name="@pahud/cdk-github-oidc.ProviderBase"></a>
+
+#### Initializers <a name="@pahud/cdk-github-oidc.ProviderBase.Initializer"></a>
+
+```typescript
+import { ProviderBase } from '@pahud/cdk-github-oidc'
+
+new ProviderBase(scope: Construct, id: string, props?: ResourceProps)
+```
+
+##### `scope`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.scope"></a>
+
+- *Type:* [`constructs.Construct`](#constructs.Construct)
+
+---
+
+##### `id`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.id"></a>
 
 - *Type:* `string`
 
-The issuer of the OIDC provider claim or the "provider URL".
+---
 
-> https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#adding-the-identity-provider-to-aws
+##### `props`<sup>Optional</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.props"></a>
+
+- *Type:* [`@aws-cdk/core.ResourceProps`](#@aws-cdk/core.ResourceProps)
 
 ---
 
-##### `thumbprint` <a name="@pahud/cdk-github-oidc.Provider.property.thumbprint"></a>
+#### Methods <a name="Methods"></a>
+
+##### `createRole` <a name="@pahud/cdk-github-oidc.ProviderBase.createRole"></a>
+
+```typescript
+public createRole(id: string, repo: RepositoryConfig[], roleProps?: RoleProps)
+```
+
+###### `id`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.id"></a>
 
 - *Type:* `string`
 
-The thumbprint of the OIDC provider claim.
+---
 
-> https://github.com/aws-actions/configure-aws-credentials
+###### `repo`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.repo"></a>
+
+- *Type:* [`@pahud/cdk-github-oidc.RepositoryConfig`](#@pahud/cdk-github-oidc.RepositoryConfig)[]
 
 ---
+
+###### `roleProps`<sup>Optional</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.roleProps"></a>
+
+- *Type:* [`@aws-cdk/aws-iam.RoleProps`](#@aws-cdk/aws-iam.RoleProps)
+
+---
+
+
+#### Properties <a name="Properties"></a>
+
+##### `openIdConnectProvider`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.property.openIdConnectProvider"></a>
+
+```typescript
+public readonly openIdConnectProvider: IOpenIdConnectProvider;
+```
+
+- *Type:* [`@aws-cdk/aws-iam.IOpenIdConnectProvider`](#@aws-cdk/aws-iam.IOpenIdConnectProvider)
+
+---
+
 
 ## Structs <a name="Structs"></a>
 
