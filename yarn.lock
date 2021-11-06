@@ -12,21 +12,6 @@
     "@aws-cdk/cx-api" "1.130.0"
     constructs "^3.3.69"
 
-"@aws-cdk/assertions@^1.130.0":
-  version "1.130.0"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/assertions/-/assertions-1.130.0.tgz#588354eeef8924394c46e463158d20c8cfce3fff"
-  integrity sha512-dQSM8QxVlqEASOyb+GtcUYyqTw2vLzRfQFA/V2Uh+EEpFn5ssD96bMOB86mfDXjVQGx2pppuLrU1CaGQeYRPlg==
-  dependencies:
-    "@aws-cdk/cloud-assembly-schema" "1.130.0"
-    "@aws-cdk/core" "1.130.0"
-    "@aws-cdk/cx-api" "1.130.0"
-    colors "^1.4.0"
-    constructs "^3.3.69"
-    diff "^5.0.0"
-    fast-deep-equal "^3.1.3"
-    string-width "^4.2.3"
-    table "^6.7.2"
-
 "@aws-cdk/aws-iam@^1.95.2":
   version "1.130.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-iam/-/aws-iam-1.130.0.tgz#c4dfe3772f2381527b3fd49331c214562fb3c044"
@@ -2403,9 +2388,9 @@ ecc-jsbn@~0.1.1:
     safer-buffer "^2.1.0"
 
 electron-to-chromium@^1.3.886:
-  version "1.3.889"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.889.tgz#0b7c6f7628559592d5406deda281788f37107790"
-  integrity sha512-suEUoPTD1mExjL9TdmH7cvEiWJVM2oEiAi+Y1p0QKxI2HcRlT44qDTP2c1aZmVwRemIPYOpxmV7CxQCOWcm4XQ==
+  version "1.3.890"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.890.tgz#e7143b659f73dc4d0512d1ae4baeb0fb9e7bc835"
+  integrity sha512-VWlVXSkv0cA/OOehrEyqjUTHwV8YXCPTfPvbtoeU2aHR21vI4Ejh5aC4AxUwOmbLbBgb6Gd3URZahoCxtBqCYQ==
 
 emittery@^0.8.1:
   version "0.8.1"

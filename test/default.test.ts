@@ -1,4 +1,5 @@
-import { Template } from '@aws-cdk/assertions';
+import { SynthUtils } from '@aws-cdk/assert';
+import '@aws-cdk/assert/jest';
 import * as cdk from '@aws-cdk/core';
 import { Provider } from '../src';
 
@@ -10,12 +11,15 @@ beforeEach(() => {
   stack = new cdk.Stack(app, 'demo-stack');
 });
 
-test('create a default provider)', () => {
+
+test('create a default provider', () => {
   // GIVEN
   // WHEN
   new Provider(stack, 'Provider');
+  // match snapshot
+  expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
   // we should have the provider
-  Template.fromStack(stack).hasResourceProperties('Custom::AWSCDKOpenIdConnectProvider', {
+  expect(stack).toHaveResource('Custom::AWSCDKOpenIdConnectProvider', {
     ServiceToken: {
       'Fn::GetAtt': [
         'CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0',
@@ -32,7 +36,7 @@ test('create a default provider)', () => {
   });
 });
 
-test('create iam role for single repository)', () => {
+test('create iam role for single repository', () => {
   // GIVEN
   const provider = new Provider(stack, 'Provider');
   // WHEN
@@ -42,7 +46,7 @@ test('create iam role for single repository)', () => {
     ],
   );
   // we should have a correct IAM role
-  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+  expect(stack).toHaveResource('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -67,7 +71,7 @@ test('create iam role for single repository)', () => {
   });
 });
 
-test('create iam role for single repository specific branch)', () => {
+test('create iam role for single repository specific branch', () => {
   // GIVEN
   const provider = new Provider(stack, 'Provider');
   // WHEN
@@ -77,7 +81,7 @@ test('create iam role for single repository specific branch)', () => {
     ],
   );
   // we should have a correct IAM role and `StringLike` condition.
-  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+  expect(stack).toHaveResource('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -102,7 +106,7 @@ test('create iam role for single repository specific branch)', () => {
   });
 });
 
-test('create iam role for single repository specific tag)', () => {
+test('create iam role for single repository specific tag', () => {
   // GIVEN
   const provider = new Provider(stack, 'Provider');
   // WHEN
@@ -112,7 +116,7 @@ test('create iam role for single repository specific tag)', () => {
     ],
   );
   // we should have a correct IAM role and `StringLike` condition.
-  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+  expect(stack).toHaveResource('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -137,7 +141,7 @@ test('create iam role for single repository specific tag)', () => {
   });
 });
 
-test('create iam role for multiple repositories)', () => {
+test('create iam role for multiple repositories', () => {
   // GIVEN
   const provider = new Provider(stack, 'Provider');
   // WHEN
@@ -149,7 +153,7 @@ test('create iam role for multiple repositories)', () => {
     ],
   );
   // we should have a correct IAM role
-  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+  expect(stack).toHaveResource('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -174,4 +178,18 @@ test('create iam role for multiple repositories)', () => {
       Version: '2012-10-17',
     },
   });
+});
+
+test('throw with empty repo', () => {
+  // GIVEN
+  const provider = new Provider(stack, 'Provider');
+  // WHEN
+  // we should throw an error
+  expect(() => {
+    provider.createRole('gh-oidc-role',
+      [
+      // empty repo
+      ],
+    );
+  }).toThrow(/Error - at least one repository is required/);
 });

@@ -17,7 +17,7 @@ const project = new AwsCdkConstructLibrary({
   devDeps: [
     'aws-cdk',
     'ts-node',
-    '@aws-cdk/assertions',
+    '@aws-cdk/assert',
   ],
   depsUpgradeOptions: {
     ignoreProjen: false,
