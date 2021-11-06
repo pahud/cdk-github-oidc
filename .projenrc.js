@@ -40,6 +40,11 @@ new JsonFile(project, 'cdk.json', {
   },
 });
 
+project.package.addField('resolutions', {
+  'ansi-regex': '^5.0.1',
+});
+
+
 const gitpodPrebuild = project.addTask('gitpod:prebuild', {
   description: 'Prebuild setup for Gitpod',
 });
