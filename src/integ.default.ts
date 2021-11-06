@@ -11,22 +11,7 @@ const env = {
 const stack = new cdk.Stack(app, 'demo-stack', { env });
 
 const provider = new Provider(stack, 'GithubOpenIdConnectProvider');
-const importedProvider = Provider.fromAccount(stack, 'ImportedGithubOpenIdConnectProvider');
 provider.createRole('gh-oidc-role',
-  [
-    { owner: 'pahud', repo: 'gitpod-workspace' },
-    { owner: 'pahud', repo: 'github-codespace' },
-    { owner: 'pahud', repo: 'vscode' },
-  ],
-);
-importedProvider.createRole('gh-oidc-role2',
-  [
-    { owner: 'pahud', repo: 'gitpod-workspace' },
-    { owner: 'pahud', repo: 'github-codespace' },
-    { owner: 'pahud', repo: 'vscode' },
-  ],
-);
-importedProvider.createRole('gh-oidc-role3',
   [
     { owner: 'pahud', repo: 'gitpod-workspace' },
     { owner: 'pahud', repo: 'github-codespace' },
