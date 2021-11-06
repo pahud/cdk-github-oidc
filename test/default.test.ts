@@ -48,9 +48,6 @@ test('create iam role for single repository)', () => {
         {
           Action: 'sts:AssumeRoleWithWebIdentity',
           Condition: {
-            StringEquals: {
-              'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-            },
             StringLike: {
               'token.actions.githubusercontent.com:sub': [
                 'repo:octo-org/repo:*',
@@ -86,9 +83,6 @@ test('create iam role for single repository specific branch)', () => {
         {
           Action: 'sts:AssumeRoleWithWebIdentity',
           Condition: {
-            StringEquals: {
-              'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-            },
             StringLike: {
               'token.actions.githubusercontent.com:sub': [
                 'repo:octo-org/repo:ref:refs/heads/demo-branch',
@@ -124,9 +118,6 @@ test('create iam role for single repository specific tag)', () => {
         {
           Action: 'sts:AssumeRoleWithWebIdentity',
           Condition: {
-            StringEquals: {
-              'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-            },
             StringLike: {
               'token.actions.githubusercontent.com:sub': [
                 'repo:octo-org/repo:ref:refs/tags/demo-tag',
@@ -164,9 +155,6 @@ test('create iam role for multiple repositories)', () => {
         {
           Action: 'sts:AssumeRoleWithWebIdentity',
           Condition: {
-            StringEquals: {
-              'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-            },
             StringLike: {
               'token.actions.githubusercontent.com:sub': [
                 'repo:octo-org/first-repo:*',

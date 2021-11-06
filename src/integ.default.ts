@@ -13,8 +13,5 @@ const stack = new cdk.Stack(app, 'demo-stack', { env });
 new Provider(stack, 'GithubOpenIdConnectProvider')
   .createRole('gh-oidc-role',
     [
-      { owner: 'pahud', repo: 'gitpod-workspace' },
-      { owner: 'pahud', repo: 'github-codespace' },
-      { owner: 'pahud', repo: 'vscode' },
     ],
   );

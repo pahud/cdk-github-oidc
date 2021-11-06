@@ -69,14 +69,12 @@ export class Provider extends cdk.Construct {
    * @returns an IAM role
    */
   public createRole(id: string, repo: RepositoryConfig[], roleProps?: iam.RoleProps):iam.Role {
+    if (repo.length == 0) {
+      throw new Error('Error - at least one repository is required');
+    }
     const role = new iam.Role(this, id, {
       ...roleProps,
       assumedBy: new iam.OpenIdConnectPrincipal(this.provider, {
-        StringEquals: {
-          // Audience is always sts.amazonaws.com with AWS official Github Action
-          // https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#adding-the-identity-provider-to-aws
-          [`${Provider.issuer}:aud`]: 'sts.amazonaws.com',
-        },
         StringLike: {
           [`${Provider.issuer}:sub`]: this.formatSubject(repo),
         },
