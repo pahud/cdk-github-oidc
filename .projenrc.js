@@ -26,6 +26,10 @@ const project = new AwsCdkConstructLibrary({
       secret: AUTOMATION_TOKEN,
     },
   },
+  autoApproveOptions: {
+    secret: 'GITHUB_TOKEN',
+    allowedUsernames: ['pahud'],
+  },
   npmAccess: NpmAccess.PUBLIC,
   publishToPypi: {
     distName: 'pahud-cdk-github-oidc',
