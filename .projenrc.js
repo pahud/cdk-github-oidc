@@ -1,8 +1,9 @@
-const { AwsCdkConstructLibrary, JsonFile, DevEnvironmentDockerImage, Gitpod, NpmAccess } = require('projen');
+const { awscdk, JsonFile, DevEnvironmentDockerImage, Gitpod } = require('projen');
+const { NpmAccess } = require('projen/lib/javascript');
 
 const AUTOMATION_TOKEN = 'PROJEN_GITHUB_TOKEN';
 
-const project = new AwsCdkConstructLibrary({
+const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Pahud Hsieh',
   authorAddress: 'pahudnet@gmail.com',
   cdkVersion: '1.95.2',
