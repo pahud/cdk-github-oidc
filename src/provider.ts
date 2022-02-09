@@ -1,5 +1,8 @@
-import * as iam from '@aws-cdk/aws-iam';
-import * as cdk from '@aws-cdk/core';
+import {
+  Resource, Stack,
+  aws_iam as iam,
+} from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
 const DEFAULTS: { [key: string]: string } = {
   issuer: 'token.actions.githubusercontent.com',
@@ -34,7 +37,7 @@ export interface RepositoryConfig {
   readonly filter?: string;
 }
 
-export abstract class ProviderBase extends cdk.Resource {
+export abstract class ProviderBase extends Resource {
   public abstract readonly openIdConnectProvider: iam.IOpenIdConnectProvider;
   /**
    *
@@ -67,13 +70,13 @@ export class Provider extends ProviderBase {
   /**
    * import the existing provider
    */
-  public static fromAccount(scope: cdk.Construct, id: string): ProviderBase {
+  public static fromAccount(scope: Construct, id: string): ProviderBase {
     class Import extends ProviderBase {
       public readonly openIdConnectProvider: iam.IOpenIdConnectProvider;
-      constructor(s: cdk.Construct, i: string) {
+      constructor(s: Construct, i: string) {
         super(s, i);
         // arn:aws:iam::xxxxxxxxxxxx:oidc-provider/token.actions.githubusercontent.com
-        const arn = cdk.Stack.of(scope).formatArn({
+        const arn = Stack.of(scope).formatArn({
           resource: 'oidc-provider',
           service: 'iam',
           region: '',
@@ -86,7 +89,7 @@ export class Provider extends ProviderBase {
   }
   public readonly issuer: string = DEFAULTS.issuer;
   public readonly openIdConnectProvider: iam.IOpenIdConnectProvider;
-  constructor(scope: cdk.Construct, id: string) {
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     this.openIdConnectProvider = new iam.OpenIdConnectProvider(this, `Provider${id}`, {

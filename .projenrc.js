@@ -1,30 +1,22 @@
 const { awscdk, JsonFile, DevEnvironmentDockerImage, Gitpod } = require('projen');
 const { NpmAccess } = require('projen/lib/javascript');
 
-const AUTOMATION_TOKEN = 'PROJEN_GITHUB_TOKEN';
-
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Pahud Hsieh',
   authorAddress: 'pahudnet@gmail.com',
-  cdkVersion: '1.95.2',
+  cdkVersion: '2.0.0',
   description: 'CDK construct library for Github OpenID Connect Identity Provider',
   defaultReleaseBranch: 'main',
   name: '@pahud/cdk-github-oidc',
   repositoryUrl: 'https://github.com/pahud/cdk-github-oidc.git',
-  cdkDependencies: [
-    '@aws-cdk/aws-iam',
-    '@aws-cdk/core',
-  ],
   devDeps: [
-    'aws-cdk',
     'ts-node',
-    '@aws-cdk/assert',
+    'aws-cdk',
   ],
   depsUpgradeOptions: {
     ignoreProjen: false,
     workflowOptions: {
       labels: ['auto-approve', 'auto-merge'],
-      secret: AUTOMATION_TOKEN,
     },
   },
   autoApproveOptions: {
