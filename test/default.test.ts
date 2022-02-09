@@ -1,24 +1,25 @@
-import { SynthUtils } from '@aws-cdk/assert';
-import '@aws-cdk/assert/jest';
-import * as cdk from '@aws-cdk/core';
+import { App, Stack } from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
 import { Provider } from '../src';
 
-let app: cdk.App;
-let stack: cdk.Stack;
+let app: App;
+let stack: Stack;
 
 beforeEach(() => {
-  app = new cdk.App();
-  stack = new cdk.Stack(app, 'demo-stack');
+  app = new App();
+  stack = new Stack(app, 'demo-stack');
 });
 
 test('create a default provider', () => {
   // GIVEN
+
   // WHEN
   new Provider(stack, 'Provider');
   // match snapshot
-  expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+  const t = Template.fromStack(stack);
+  expect(t).toMatchSnapshot();
   // we should have the provider
-  expect(stack).toHaveResource('Custom::AWSCDKOpenIdConnectProvider', {
+  t.hasResourceProperties('Custom::AWSCDKOpenIdConnectProvider', {
     ServiceToken: {
       'Fn::GetAtt': [
         'CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0',
@@ -45,7 +46,7 @@ test('create iam role for single repository', () => {
     ],
   );
   // we should have a correct IAM role
-  expect(stack).toHaveResource('AWS::IAM::Role', {
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -80,7 +81,7 @@ test('create iam role for single repository specific branch', () => {
     ],
   );
   // we should have a correct IAM role and `StringLike` condition.
-  expect(stack).toHaveResource('AWS::IAM::Role', {
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -115,7 +116,7 @@ test('create iam role for single repository specific tag', () => {
     ],
   );
   // we should have a correct IAM role and `StringLike` condition.
-  expect(stack).toHaveResource('AWS::IAM::Role', {
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -152,7 +153,7 @@ test('create iam role for multiple repositories', () => {
     ],
   );
   // we should have a correct IAM role
-  expect(stack).toHaveResource('AWS::IAM::Role', {
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {
@@ -189,7 +190,7 @@ test('create an iam role from the imported provider', () => {
     ],
   );
   // we should have a correct IAM role
-  expect(stack).toHaveResource('AWS::IAM::Role', {
+  Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
     AssumeRolePolicyDocument: {
       Statement: [
         {

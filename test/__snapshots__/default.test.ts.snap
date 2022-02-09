@@ -3,17 +3,10 @@
 exports[`create a default provider 1`] = `
 Object {
   "Parameters": Object {
-    "AssetParametersff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15ArtifactHashD83177FF": Object {
-      "Description": "Artifact hash for asset \\"ff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15\\"",
-      "Type": "String",
-    },
-    "AssetParametersff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15S3Bucket2010B486": Object {
-      "Description": "S3 bucket for asset \\"ff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15\\"",
-      "Type": "String",
-    },
-    "AssetParametersff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15S3VersionKey9B3E73DD": Object {
-      "Description": "S3 key for asset version \\"ff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15\\"",
-      "Type": "String",
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
     },
   },
   "Resources": Object {
@@ -24,41 +17,9 @@ Object {
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParametersff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15S3Bucket2010B486",
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                Object {
-                  "Fn::Select": Array [
-                    0,
-                    Object {
-                      "Fn::Split": Array [
-                        "||",
-                        Object {
-                          "Ref": "AssetParametersff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15S3VersionKey9B3E73DD",
-                        },
-                      ],
-                    },
-                  ],
-                },
-                Object {
-                  "Fn::Select": Array [
-                    1,
-                    Object {
-                      "Fn::Split": Array [
-                        "||",
-                        Object {
-                          "Ref": "AssetParametersff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15S3VersionKey9B3E73DD",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            ],
-          },
+          "S3Key": "ff8d00f9cedcafaf1ab299446ed2500b61b0b88ab40f066d05b26ff66bd58b15.zip",
         },
         "Handler": "__entrypoint__.handler",
         "MemorySize": 128,
@@ -135,6 +96,33 @@ Object {
       },
       "Type": "Custom::AWSCDKOpenIdConnectProvider",
       "UpdateReplacePolicy": "Delete",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
     },
   },
 }

@@ -16,7 +16,7 @@ new Provider(scope: Construct, id: string)
 
 ##### `scope`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.parameter.scope"></a>
 
-- *Type:* [`@aws-cdk/core.Construct`](#@aws-cdk/core.Construct)
+- *Type:* [`constructs.Construct`](#constructs.Construct)
 
 ---
 
@@ -39,7 +39,7 @@ Provider.fromAccount(scope: Construct, id: string)
 
 ###### `scope`<sup>Required</sup> <a name="@pahud/cdk-github-oidc.Provider.parameter.scope"></a>
 
-- *Type:* [`@aws-cdk/core.Construct`](#@aws-cdk/core.Construct)
+- *Type:* [`constructs.Construct`](#constructs.Construct)
 
 ---
 
@@ -67,7 +67,7 @@ public readonly issuer: string;
 public readonly openIdConnectProvider: IOpenIdConnectProvider;
 ```
 
-- *Type:* [`@aws-cdk/aws-iam.IOpenIdConnectProvider`](#@aws-cdk/aws-iam.IOpenIdConnectProvider)
+- *Type:* [`aws-cdk-lib.aws_iam.IOpenIdConnectProvider`](#aws-cdk-lib.aws_iam.IOpenIdConnectProvider)
 
 ---
 
@@ -96,7 +96,7 @@ new ProviderBase(scope: Construct, id: string, props?: ResourceProps)
 
 ##### `props`<sup>Optional</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.props"></a>
 
-- *Type:* [`@aws-cdk/core.ResourceProps`](#@aws-cdk/core.ResourceProps)
+- *Type:* [`aws-cdk-lib.ResourceProps`](#aws-cdk-lib.ResourceProps)
 
 ---
 
@@ -122,7 +122,7 @@ public createRole(id: string, repo: RepositoryConfig[], roleProps?: RoleProps)
 
 ###### `roleProps`<sup>Optional</sup> <a name="@pahud/cdk-github-oidc.ProviderBase.parameter.roleProps"></a>
 
-- *Type:* [`@aws-cdk/aws-iam.RoleProps`](#@aws-cdk/aws-iam.RoleProps)
+- *Type:* [`aws-cdk-lib.aws_iam.RoleProps`](#aws-cdk-lib.aws_iam.RoleProps)
 
 ---
 
@@ -135,7 +135,7 @@ public createRole(id: string, repo: RepositoryConfig[], roleProps?: RoleProps)
 public readonly openIdConnectProvider: IOpenIdConnectProvider;
 ```
 
-- *Type:* [`@aws-cdk/aws-iam.IOpenIdConnectProvider`](#@aws-cdk/aws-iam.IOpenIdConnectProvider)
+- *Type:* [`aws-cdk-lib.aws_iam.IOpenIdConnectProvider`](#aws-cdk-lib.aws_iam.IOpenIdConnectProvider)
 
 ---
 
